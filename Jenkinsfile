@@ -26,7 +26,7 @@ try{
         
         stage('Sonar Scan'){
             echo "Scanning application for vulnerabilities..."
-            sh "${mavenCMD} sonar:sonar -Dsonar.host.url=http://34.134.175.243:9000/"
+            sh "${mavenCMD} sonar:sonar -Dsonar.host.url=http://34.136.129.157:9000/"
         }
         
         stage('Publish Test Report'){
@@ -51,18 +51,22 @@ try{
             echo "Deploying  application"
             ansiblePlaybook credentialsId: 'ubuntu-ssh-connection', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'deploy.yml'
         }
+        
+        stage('Send Success mail'){
+             emailext attachLog: true, body: 'Build successfully completed', subject: 'Build Result', to: 'ghantimousumi2607@gmail.com'
+        }
     }
 }
 catch(Exception err){
     echo "Exception occured..."
     currentBuild.result="FAILURE"
    
-     emailext attachLog: true, body: '', subject: 'Build Failure Result', to: 'ghantimousumi2607@gmail.com'
+     emailext attachLog: true, body: 'Some Exception has occured. Please check the attached log', subject: 'Build Failure Result', to: 'ghantimousumi2607@gmail.com'
 }
 finally {
     (currentBuild.result!= "ABORTED") && node("master") {
-        echo "finally gets executed and end an email notification for every build"
-        emailext attachLog: true, body: 'Build completed', subject: 'Build Result', to: 'ghantimousumi2607@gmail.com'
+        echo "finally gets executed...!!"
+       
     }
     
 }

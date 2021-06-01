@@ -11,5 +11,7 @@
       name: docker
       state: started
       enabled: true
+  - name: Stop running containers
+    command: sudo docker stop $(sudo docker ps -aq)
   - name: deploy my application
     command: sudo docker run -itd -p 8888:8888 mousumighanti/mouapp:1.0

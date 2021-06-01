@@ -1,0 +1,26 @@
+  
+---
+- name: ec2-launcher
+  hosts: localhost
+  connection: local
+  
+  tasks:
+
+   - name: launch ec2
+     ec2:
+        instance_type: t2.micro
+        key_name: ubuntu-jenkins-server
+        image: ami-09e67e426f25ce0d7
+        region: us-east-1
+        group: launch-wizard-6
+
+        exact_count: 1
+        count_tag:
+                Name: abc
+        vpc_subnet_id: subnet-4faba202
+        wait: yes
+        assign_public_ip: yes
+        wait_timeout: 300
+        monitoring: no
+        
+     register: ec2
